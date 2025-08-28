@@ -1,22 +1,22 @@
-import mongoose, { Types } from "mongoose"; 
+import mongoose, { Types } from "mongoose";
 
 export enum Role {
-    SUPER_ADMIN = "SUPER_ADMIN",
-    ADMIN = "ADMIN", 
-    SENDER= "SENDER",
-    RECEIVER = "RECEIVER",
-    DELIVERY_MAN = "DELIVERY_MAN"
+  SUPER_ADMIN = "SUPER_ADMIN",
+  ADMIN = "ADMIN",
+  SENDER = "SENDER",
+  RECIVER = "RECIVER",
+  DELIVERY_MAN = "DELIVERY_MAN",
 }
 
-export interface IAuthProvider{
- provider: "google" | "credentials";
- providerId: string;
+export interface IAuthProvider {
+  provider: "google" | "credentials";
+  providerId: string;
 }
 
 export enum IsActive {
-    ACTIVE = "ACTIVE",
-    INACTIVE = "INACTIVE",
-    BLOCKED = "BLOCKED"
+  ACTIVE = "ACTIVE",
+  INACTIVE = "INACTIVE",
+  BLOCKED = "BLOCKED",
 }
 
 export interface IUser {
