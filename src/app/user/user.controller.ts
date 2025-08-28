@@ -1,17 +1,17 @@
 import { Request, Response } from "express";
 import httpStatus from "http-status-codes";
-import { JwtPayload } from "jsonwebtoken";
-import { catchAsync } from "../utils/catchAsync";
-import { sendResponse } from "../utils/sendResponse";
+import { JwtPayload } from "jsonwebtoken"; 
 import { UserServices } from "./user.service";
+import { sendResponse } from "../utils/sendResponse";
+import { catchAsync } from "../utils/catchAsync";
 
 const createUser = catchAsync(async (req: Request, res: Response) => {
   const result = await UserServices.createUserService(req.body);
 
   sendResponse(res, {
-    statusCode: httpStatus.CREATED,
     success: true,
-    message: "User Created Successfully",
+    statusCode: httpStatus.CREATED,
+    message: "User created succesfully!",
     data: result,
   });
 });
@@ -24,9 +24,9 @@ const getAllUsers = catchAsync(async (req: Request, res: Response) => {
   );
 
   sendResponse(res, {
-    statusCode: httpStatus.OK,
     success: true,
-    message: "Users Fetched Successfully",
+    statusCode: httpStatus.OK,
+    message: "User retrived succesfully!",
     data: result.data,
     meta: result.meta,
   });
@@ -44,11 +44,15 @@ const updateUser = catchAsync(async (req: Request, res: Response) => {
   );
 
   sendResponse(res, {
-    statusCode: httpStatus.CREATED,
     success: true,
+    statusCode: httpStatus.CREATED,
     message: "User Updated Successfully",
     data: user,
   });
 });
 
-export const UserController = { createUser, getAllUsers, updateUser };
+export const UserControllers = {
+  createUser,
+  getAllUsers,
+  updateUser,
+};
