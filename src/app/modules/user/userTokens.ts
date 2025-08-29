@@ -1,8 +1,8 @@
 import httpStatus from "http-status-codes";
 import { JwtPayload } from "jsonwebtoken";
-import { envVars } from "../config/env";
-import { AppError } from "../errorHelpers/AppError";
-import { generateToken, verifyToken } from "../utils/jwt";
+import { envVars } from "../../config/env";
+import { AppError } from "../../errorHelpers/AppError";
+import { generateToken, verifyToken } from "../../utils/jwt";
 import { IsActive, IUser } from "./user.interface";
 import { User } from "./user.model";
 

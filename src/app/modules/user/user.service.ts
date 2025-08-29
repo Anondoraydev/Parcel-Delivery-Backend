@@ -1,13 +1,18 @@
 import { Request } from "express";
 import httpStatus from "http-status-codes";
-import { JwtPayload } from "jsonwebtoken"; ;
-import { IUser, Role } from "../user/user.interface";
-import { User } from "../user/user.model";
-import { parcelSearchableFields } from "./parcel.constant";
-import { EStatus, IMongoUpdate, IParcel, IStatusLog } from "./parcel.interface";
-import { Parcel } from "./parcel.model";
-import { QueryBuilder } from "../utils/QueryBuilder";
-import { AppError } from "../errorHelpers/AppError";
+import { JwtPayload } from "jsonwebtoken";
+import { AppError } from "../../errorHelpers/AppError";
+import { QueryBuilder } from "../../utils/QueryBuilder";
+import { parcelSearchableFields } from "../parcel/parcel.constant";
+import {
+  EStatus,
+  IMongoUpdate,
+  IParcel,
+  IStatusLog,
+} from "../parcel/parcel.interface";
+import { Parcel } from "../parcel/parcel.model";
+import { IUser, Role } from "./user.interface";
+import { User } from "./user.model";
 
 const createParcelService = async (payload: Partial<IParcel>) => {
   const { sender } = payload;
