@@ -1,9 +1,9 @@
 import { Request, Response } from "express";
-import httpStatus from "http-status-codes"; 
+import httpStatus from "http-status-codes";
+import { catchAsync } from "../../utils/catchAsync";
+import { sendResponse } from "../../utils/sendResponse";
 import { IUser } from "../user/user.interface";
 import { ParcelServices } from "./parcel.service";
-import { catchAsync } from "../utils/catchAsync";
-import { sendResponse } from "../utils/sendResponse";
 
 const createParcel = catchAsync(async (req: Request, res: Response) => {
   const result = await ParcelServices.createParcelService(req.body);

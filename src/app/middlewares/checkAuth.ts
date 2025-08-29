@@ -3,8 +3,8 @@ import httpStatus from "http-status-codes";
 import { JwtPayload } from "jsonwebtoken";
 import { envVars } from "../config/env";
 import { AppError } from "../errorHelpers/AppError";
-import { IsActive } from "../user/user.interface";
-import { User } from "../user/user.model";
+import { IsActive } from "../modules/user/user.interface";
+import { User } from "../modules/user/user.model";
 import { verifyToken } from "../utils/jwt";
 export const checkAuth =
   (...authRoles: string[]) =>

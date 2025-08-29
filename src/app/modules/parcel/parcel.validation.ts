@@ -79,6 +79,7 @@ export const createParcelZodSchema = baseParcelSchema
     expectedDeliveryDate: true,
     fee: true,
   })
+
   .extend({
     expectedDeliveryDate: z
       .string()
@@ -143,6 +144,7 @@ export const updateParcelSchema = z
     actualDeliveryDate: z.string().datetime("Invalid date format").optional(),
     isBlocked: z.boolean().optional(),
   })
+
   .strict()
   .refine(data => Object.keys(data).length > 0, {
     message: "At least one field must be provided for update",

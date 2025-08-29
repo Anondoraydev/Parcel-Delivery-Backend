@@ -6,10 +6,10 @@ import {
   Profile,
   VerifyCallback,
 } from "passport-google-oauth20";
-import { Strategy as LocalStrategy } from "passport-local"; 
+import { Strategy as LocalStrategy } from "passport-local";
+import { Role } from "../modules/user/user.interface";
+import { User } from "../modules/user/user.model";
 import { envVars } from "./env";
-import { User } from "../user/user.model";
-import { Role } from "../user/user.interface";
 
 passport.use(
   new LocalStrategy(
@@ -26,7 +26,7 @@ passport.use(
         }
 
         const isGoogleAuthenticated = isUserExist.auths.some(
-          (providerObjects) => providerObjects.provider == "google"
+          providerObjects => providerObjects.provider == "google"
         );
 
         if (isGoogleAuthenticated && !isUserExist.password) {
