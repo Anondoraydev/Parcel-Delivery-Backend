@@ -1,12 +1,12 @@
 import httpStatus from "http-status-codes";
 import { JwtPayload } from "jsonwebtoken";
 import { envVars } from "../config/env";
-import { AppError } from "../errorHelpers/AppError";
-import { generateToken, verifyToken } from "../utils/jwt";
-import { IsActive, IUser } from "./user.interface";
-import { User } from "./user.model";
+import { AppError } from "../errorHelpers/AppError"; 
+import { generateToken, verifyToken } from "./jwt";
+import { IsActive, IUser } from "../user/user.interface";
+import { User } from "../user/user.model";
 
-export const createUserToken = (user: Partial<IUser>) => {
+export const createUserTokens = (user: Partial<IUser>) => {
   const jwtPayload = {
     userId: user._id,
     email: user.email,
@@ -30,17 +30,16 @@ export const createUserToken = (user: Partial<IUser>) => {
 export const createNewAccessTokenWithRefreshToken = async (
   refreshToken: string
 ) => {
-  const verifiedToken = verifyToken(
+  const verifiedRefreshToken = verifyToken(
     refreshToken,
     envVars.JWT_REFRESH_SECRET
   ) as JwtPayload;
 
-  const isUserExist = await User.findOne({ email: verifiedToken.userId });
+  const isUserExist = await User.findOne({ email: verifiedRefreshToken.email });
 
   if (!isUserExist) {
     throw new AppError(httpStatus.BAD_REQUEST, "User does not exist");
   }
-
   if (
     isUserExist.isActive === IsActive.BLOCKED ||
     isUserExist.isActive === IsActive.INACTIVE
@@ -50,7 +49,6 @@ export const createNewAccessTokenWithRefreshToken = async (
       `User is ${isUserExist.isActive}`
     );
   }
-
   if (isUserExist.isDeleted) {
     throw new AppError(httpStatus.BAD_REQUEST, "User is deleted");
   }
@@ -60,7 +58,6 @@ export const createNewAccessTokenWithRefreshToken = async (
     email: isUserExist.email,
     role: isUserExist.role,
   };
-
   const accessToken = generateToken(
     jwtPayload,
     envVars.JWT_ACCESS_SECRET,

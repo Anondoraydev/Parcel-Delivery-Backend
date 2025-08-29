@@ -18,13 +18,14 @@ export enum EPackageType {
 
 export interface IStatusLog {
   status: EStatus;
+  updatedBy: Types.ObjectId; // User ID
   note?: string;
   createdAt: Date;
 }
 
 export interface IPackageDetails {
   type: EPackageType;
-  weight: number;
+  weight: number; // in kg
   description?: string;
 }
 
@@ -38,7 +39,7 @@ export interface IReceiverInfo {
 export interface IParcel {
   _id: string;
   trackingId: string;
-  sender: Types.ObjectId;
+  sender: Types.ObjectId; // User ID
   receiver: IReceiverInfo;
   packageDetails: IPackageDetails;
   fee: number;
