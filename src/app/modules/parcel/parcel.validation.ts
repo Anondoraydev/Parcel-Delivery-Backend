@@ -1,10 +1,10 @@
-import mongoose from "mongoose";
 import { z } from "zod";
 import { EPackageType, EStatus } from "./parcel.interface";
+import mongoose from "mongoose";
 
 // Custom validator for MongoDB ObjectId
 const objectIdSchema = z.string().refine(
-  value => {
+  (value) => {
     return mongoose.Types.ObjectId.isValid(value);
   },
   {
@@ -44,6 +44,7 @@ export const baseParcelSchema = z.object({
       .max(100, { message: "Email cannot exceed 100 characters." }),
   }),
 
+
   packageDetails: z.object({
     type: z.nativeEnum(EPackageType),
     weight: z
@@ -56,6 +57,7 @@ export const baseParcelSchema = z.object({
       .optional(),
   }),
 
+  
   fee: z
     .number()
     .nonnegative("Fee cannot be negative")
@@ -79,19 +81,18 @@ export const createParcelZodSchema = baseParcelSchema
     expectedDeliveryDate: true,
     fee: true,
   })
-
   .extend({
     expectedDeliveryDate: z
       .string()
       .datetime()
-      .transform(val => new Date(val))
-      .refine(date => date > new Date(), {
+      .transform((val) => new Date(val))
+      .refine((date) => date > new Date(), {
         message: "Expected delivery date must be in the future",
       })
       .optional(),
   });
 
-// Update Parcel Validation
+// Update Parcel Validation (for PATCH requests)
 export const updateParcelSchema = z
   .object({
     receiver: z
@@ -144,8 +145,7 @@ export const updateParcelSchema = z
     actualDeliveryDate: z.string().datetime("Invalid date format").optional(),
     isBlocked: z.boolean().optional(),
   })
-
   .strict()
-  .refine(data => Object.keys(data).length > 0, {
+  .refine((data) => Object.keys(data).length > 0, {
     message: "At least one field must be provided for update",
   });

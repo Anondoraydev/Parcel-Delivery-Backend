@@ -1,6 +1,6 @@
 import { Response } from "express";
 
-interface AuthTokens {
+export interface AuthTokens {
   accessToken?: string;
   refreshToken?: string;
 }
@@ -19,4 +19,4 @@ export const setAuthCookie = (res: Response, tokenInfo: AuthTokens) => {
       secure: false,
     });
   }
-}
+};

@@ -38,7 +38,7 @@ const loadEnvVariables = (): EnvConfig => {
     "FRONTEND_URL",
   ];
 
-  requiredEnvVariables.forEach(key => {
+  requiredEnvVariables.forEach((key) => {
     if (!process.env[key]) {
       throw new Error(`Missing required environment variable ${key}`);
     }

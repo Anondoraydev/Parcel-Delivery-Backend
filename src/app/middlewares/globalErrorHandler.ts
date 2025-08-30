@@ -2,12 +2,12 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { NextFunction, Request, Response } from "express";
 import { envVars } from "../config/env";
-import { AppError } from "../errorHelpers/AppError";
-import { handleCastError } from "../helpers/handleCastError";
-import { handlerDuplicateError } from "../helpers/handleDuplicateError";
-import { handlerValidationError } from "../helpers/handlerValidationError";
-import { handlerZodError } from "../helpers/handlerZodError";
 import { TErrorSources } from "../interfaces/error.types";
+import { handlerDuplicateError } from "../helpers/handleDuplicateError";
+import { handleCastError } from "../helpers/handleCastError";
+import { handlerZodError } from "../helpers/handlerZodError";
+import { handlerValidationError } from "../helpers/handlerValidationError";
+import { AppError } from "../errorHelpers/AppError";
 
 export const globalErrorHandler = (
   err: any,
