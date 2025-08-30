@@ -69,11 +69,11 @@ const userSchema = new Schema<IUser>(
   }
 );
 
-// Virtual fields
+// Virtual for received parcels
 userSchema.virtual("receivedParcels", {
   ref: "Parcel",
   localField: "_id",
-  foreignField: "receiver.userId",
+  foreignField: "receiver.userId", // Assuming receiver has userId
 });
 
 export const User = model<IUser>("User", userSchema);

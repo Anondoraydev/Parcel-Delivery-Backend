@@ -1,8 +1,8 @@
 import { Router } from "express";
-import { checkAuth } from "../../middlewares/checkAuth";
-import { validateRequestObject } from "../../middlewares/validateRequest";
-import { Role } from "../user/user.interface";
 import { ParcelControllers } from "./parcel.controller";
+import { checkAuth } from "../../middlewares/checkAuth";
+import { Role } from "../user/user.interface";
+import { validateRequestObject } from "../../middlewares/validateRequest";
 import { createParcelZodSchema, updateParcelSchema } from "./parcel.validation";
 
 const router = Router();

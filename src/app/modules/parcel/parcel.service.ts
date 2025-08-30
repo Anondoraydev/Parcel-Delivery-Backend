@@ -1,6 +1,4 @@
 import { Request } from "express";
-import httpStatus from "http-status-codes";
-import { JwtPayload } from "jsonwebtoken";
 import { AppError } from "../../errorHelpers/AppError";
 import { QueryBuilder } from "../../utils/QueryBuilder";
 import { IUser, Role } from "../user/user.interface";
@@ -8,6 +6,9 @@ import { User } from "../user/user.model";
 import { parcelSearchableFields } from "./parcel.constant";
 import { EStatus, IMongoUpdate, IParcel, IStatusLog } from "./parcel.interface";
 import { Parcel } from "./parcel.model";
+import httpStatus from "http-status-codes";
+import { JwtPayload } from "jsonwebtoken";
+
 const createParcelService = async (payload: Partial<IParcel>) => {
   const { sender } = payload;
 
@@ -39,6 +40,7 @@ const getAllParcelService = async (
   query: Record<string, string>,
   user: Partial<IUser>
 ) => {
+
   if (user.role === Role.ADMIN || user.role === Role.SUPER_ADMIN) {
     const queryBuilder = new QueryBuilder(Parcel.find(), query);
 

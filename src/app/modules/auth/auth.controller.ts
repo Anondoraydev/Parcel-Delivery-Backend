@@ -129,7 +129,7 @@ const googleCallbackController = catchAsync(
       throw new AppError(httpStatus.NOT_FOUND, "User Not Found");
     }
 
-    const tokenInfo = createUserTokens(user as any);
+    const tokenInfo = createUserTokens(user);
 
     setAuthCookie(res, tokenInfo);
 

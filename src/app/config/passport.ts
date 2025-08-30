@@ -26,7 +26,7 @@ passport.use(
         }
 
         const isGoogleAuthenticated = isUserExist.auths.some(
-          providerObjects => providerObjects.provider == "google"
+          (providerObjects) => providerObjects.provider == "google"
         );
 
         if (isGoogleAuthenticated && !isUserExist.password) {
