@@ -43,8 +43,6 @@ export const baseParcelSchema = z.object({
       .min(5, { message: "Email must be at least 5 characters long." })
       .max(100, { message: "Email cannot exceed 100 characters." }),
   }),
-
-
   packageDetails: z.object({
     type: z.nativeEnum(EPackageType),
     weight: z
@@ -56,8 +54,6 @@ export const baseParcelSchema = z.object({
       .max(500, "Description cannot exceed 500 characters")
       .optional(),
   }),
-
-  
   fee: z
     .number()
     .nonnegative("Fee cannot be negative")

@@ -1,12 +1,12 @@
+import bcryptjs from "bcryptjs";
+import httpStatus from "http-status-codes";
+import { JwtPayload } from "jsonwebtoken";
 import { envVars } from "../../config/env";
 import { AppError } from "../../errorHelpers/AppError";
-import { IAuthProvider, IUser, Role } from "./user.interface";
-import { User } from "./user.model";
-import httpStatus from "http-status-codes";
-import bcryptjs from "bcryptjs";
-import { JwtPayload } from "jsonwebtoken";
 import { QueryBuilder } from "../../utils/QueryBuilder";
 import { userSearchableFields } from "./user.constants";
+import { IAuthProvider, IUser, Role } from "./user.interface";
+import { User } from "./user.model";
 
 const createUserService = async (payload: Partial<IUser>) => {
   const { email, password, ...rest } = payload;
@@ -45,6 +45,7 @@ const getAllUsers = async (query: Record<string, string>) => {
     .filter()
     .sort()
     .fields()
+    .selectField("-password")
     .paginate();
 
   const [data, meta] = await Promise.all([
@@ -106,8 +107,15 @@ const updateUser = async (
   return newUpdatedUser;
 };
 
+const getMe = async (userId: string) => {
+  const user = await User.findById(userId).select("-password");
+  return {
+    data: user,
+  };
+};
 export const UserServices = {
   createUserService,
   getAllUsers,
   updateUser,
+  getMe,
 };

@@ -1,9 +1,9 @@
-import httpStatus from "http-status-codes";
 import { Schema, model } from "mongoose";
-import { AppError } from "../../errorHelpers/AppError";
-import { generateTrackingId } from "../../utils/generateTrackingId";
-import { User } from "../user/user.model";
 import { EPackageType, EStatus, IParcel, IStatusLog } from "./parcel.interface";
+import { AppError } from "../../errorHelpers/AppError";
+import httpStatus from "http-status-codes";
+import { User } from "../user/user.model";
+import { generateTrackingId } from "../../utils/generateTrackingId";
 
 const statusLogSchema = new Schema<IStatusLog>({
   status: {

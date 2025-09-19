@@ -1,4 +1,6 @@
 import { Request } from "express";
+import httpStatus from "http-status-codes";
+import { JwtPayload } from "jsonwebtoken";
 import { AppError } from "../../errorHelpers/AppError";
 import { QueryBuilder } from "../../utils/QueryBuilder";
 import { IUser, Role } from "../user/user.interface";
@@ -6,8 +8,6 @@ import { User } from "../user/user.model";
 import { parcelSearchableFields } from "./parcel.constant";
 import { EStatus, IMongoUpdate, IParcel, IStatusLog } from "./parcel.interface";
 import { Parcel } from "./parcel.model";
-import httpStatus from "http-status-codes";
-import { JwtPayload } from "jsonwebtoken";
 
 const createParcelService = async (payload: Partial<IParcel>) => {
   const { sender } = payload;
@@ -40,41 +40,51 @@ const getAllParcelService = async (
   query: Record<string, string>,
   user: Partial<IUser>
 ) => {
+  const queryBuilder = new QueryBuilder(Parcel.find(), query);
+
+  // Handle user validation and filter building
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  let filterCriteria: Record<string, any> = {};
 
   if (user.role === Role.ADMIN || user.role === Role.SUPER_ADMIN) {
-    const queryBuilder = new QueryBuilder(Parcel.find(), query);
-
-    const users = queryBuilder
-      .search(parcelSearchableFields)
-      .filter()
-      .sort()
-      .fields()
-      .paginate();
-
-    const [data, meta] = await Promise.all([
-      users.build(),
-      queryBuilder.getMeta(),
-    ]);
-    return {
-      data,
-      meta,
-    };
+    // No additional filter for admin users
+    filterCriteria = {};
   } else {
     const userExist = await User.findOne({ email: user.email });
-    let data;
 
     if (!userExist) {
       throw new AppError(httpStatus.NOT_FOUND, "Invalid User request!");
     }
-    if (user.role === Role.SENDER) {
-      // Now `userExist` is a single document (or null)
-      data = await Parcel.find({ sender: userExist._id });
-    } else {
-      data = await Parcel.find({ "receiver.email": userExist.email });
-    }
 
-    return { data, meta: { total: data?.length } }; // Maintain consistent return type
+    if (user.role === Role.SENDER) {
+      filterCriteria = { sender: userExist._id };
+    } else {
+      filterCriteria = { "receiver.email": userExist.email };
+    }
   }
+
+  // Build the query with common operations
+  const usersQuery = queryBuilder
+    .search(parcelSearchableFields)
+    .filter(filterCriteria)
+    .sort()
+    .fields()
+    .selectField("-_id")
+    .paginate();
+
+  // Execute query and get meta data
+  const [data, meta] = await Promise.all([
+    usersQuery
+      .build()
+      .populate("sender", "name email phone -_id")
+      .select("-sender.id -sender._id"),
+    queryBuilder.getMeta(),
+  ]);
+
+  return {
+    data,
+    meta,
+  };
 };
 
 const updateParcelService = async (req: Request) => {
@@ -207,6 +217,44 @@ const updateParcelService = async (req: Request) => {
           update.$set.actualDeliveryDate = new Date();
         }
         update.$push = { statusLog };
+      }
+      break;
+    }
+    case Role.RECIVER: {
+      if (!updateData.currentStatus) {
+        throw new Error(
+          `You do not have the authority to update ${Object.keys(updateData)}`
+        );
+      }
+
+      // Receiver can only update status to DELIVERED
+      if (updateData.currentStatus !== EStatus.DELIVERED) {
+        throw new Error(
+          `Receivers can only confirm delivery. Invalid status: ${updateData.currentStatus}`
+        );
+      }
+
+      // Additional validation - ensure the package is in a valid state for receiver confirmation
+      if (parcel.currentStatus !== EStatus.IN_TRANSIT) {
+        throw new Error(
+          `Cannot confirm delivery. Package must be in transit or out for delivery. Current status: ${parcel.currentStatus}`
+        );
+      }
+
+      if (updateData.currentStatus === EStatus.DELIVERED) {
+        update.$set = {
+          currentStatus: EStatus.DELIVERED,
+          actualDeliveryDate: new Date(),
+          receiverConfirmationDate: new Date(), // Optional: track when receiver confirmed
+        };
+        update.$push = {
+          statusLog: {
+            status: EStatus.DELIVERED,
+            updatedBy: user?.userId,
+            createdAt: new Date(),
+            note: "Delivery confirmed by recipient",
+          },
+        };
       }
       break;
     }
