@@ -71,7 +71,6 @@ Follow these steps to set up the project:
         # Add any other necessary environment variables here
 
     ```
-
         **Important:** Replace `YourSecreetKey` with a strong, randomly generated secret key for session management.
 
     ```
