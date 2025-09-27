@@ -1,7 +1,6 @@
 # Parcel-Delivery-Backend
 ## Project Overview
 
-
 This repository contains the backend application for a parcel delivery service. It's built using TypeScript, Express.js, and Node.js, providing a robust and scalable foundation for managing parcel delivery operations.
 
 ## Key Features & Benefits
