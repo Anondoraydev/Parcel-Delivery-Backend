@@ -15,7 +15,6 @@ This repository contains the backend application for a parcel delivery service. 
 
 ## Prerequisites & Dependencies
 
-
 Before you begin, ensure you have the following installed:
 
 - **Node.js:** (Version >= 16 recommended) - [https://nodejs.org/](https://nodejs.org/)
